@@ -1,0 +1,84 @@
+//
+//  Grid.swift
+//  NextReality_Tutorial4
+//
+//  Created by Ambuj Punn on 5/2/18.
+//  Copyright © 2018 Ambuj Punn. All rights reserved.
+//
+
+import Foundation
+import SceneKit
+import ARKit
+
+//Here, we extend the functionality of ARPlaneAnchor. By default, the size is returned in meters. We create two properties: "width" and "length" that convert the meters to inches. We use the "extent" property of the ARPlaneAnchor and get its "x" and "z" value. Can you guess why we don't get the "y" value? That's because geometric planes are flat and don't have any height!
+
+extension ARPlaneAnchor {
+    // Inches
+    var width: Float { return self.extent.x * 39.3701} //converting meters to inches
+    var length: Float { return self.extent.z * 39.3701} //converting meters to inches
+}
+
+class Grid : SCNNode {
+    
+    var anchor: ARPlaneAnchor
+    var planeGeometry: SCNPlane!
+    var textGeometry: SCNText!
+
+    
+    init(anchor: ARPlaneAnchor) {
+        self.anchor = anchor
+        super.init()
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func update(anchor: ARPlaneAnchor) {
+        planeGeometry.width = CGFloat(anchor.extent.x);
+        planeGeometry.height = CGFloat(anchor.extent.z);
+        position = SCNVector3Make(anchor.center.x, 0, anchor.center.z);
+        
+        let planeNode = self.childNodes.first!
+        planeNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(geometry: self.planeGeometry, options: nil))
+        if let textGeometry = self.childNode(withName: "textNode", recursively: true)?.geometry as? SCNText {
+            // Update text to new size
+            textGeometry.string = String(format: "%.1f\"", anchor.width) + " x " + String(format: "%.1f\"", anchor.length)
+        }
+    }
+    
+    private func setup() {
+        planeGeometry = SCNPlane(width: CGFloat(anchor.width), height: CGFloat(anchor.length))
+        
+        let material = SCNMaterial()
+        material.diffuse.contents = UIImage(named:"overlay_grid.png")
+        
+        planeGeometry.materials = [material]
+        let planeNode = SCNNode(geometry: self.planeGeometry)
+        planeNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(geometry: planeGeometry, options: nil))
+        planeNode.physicsBody?.categoryBitMask = 2
+        
+        planeNode.position = SCNVector3Make(anchor.center.x, 0, anchor.center.z);
+        planeNode.transform = SCNMatrix4MakeRotation(Float(-Double.pi / 2.0), 1.0, 0.0, 0.0);
+        
+        // 1.
+        let textNodeMaterial = SCNMaterial()
+        textNodeMaterial.diffuse.contents = UIColor.white
+        
+        // Set up text geometry
+        textGeometry = SCNText(string: String(format: "%.1f\"", anchor.width) + " x " + String(format: "%.1f\"", anchor.length), extrusionDepth: 1)
+        textGeometry.font = UIFont.systemFont(ofSize: 10)
+        textGeometry.materials = [textNodeMaterial]
+        
+        // Integrate text node with text geometry
+        // 2.
+        let textNode = SCNNode(geometry: textGeometry)
+        textNode.name = "textNode"
+        textNode.position = SCNVector3Make(anchor.center.x, 0, anchor.center.z);
+        textNode.scale = SCNVector3Make(0.005, 0.005, 0.005)
+        
+        addChildNode(textNode)
+        addChildNode(planeNode)
+    }
+}
