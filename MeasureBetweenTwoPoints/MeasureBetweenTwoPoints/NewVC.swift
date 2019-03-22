@@ -32,6 +32,7 @@ class NewVC: UIViewController, ARSCNViewDelegate,ARSessionDelegate {
     var startPoint : SCNVector3!
     var endPoint : SCNVector3!
     var line : SCNNode!
+    var lines : [SCNNode]! = []
     var worldPosition : SCNVector3!
     var textNode : SCNNode!
     @IBOutlet weak var indicator: UIImageView!
@@ -40,6 +41,7 @@ class NewVC: UIViewController, ARSCNViewDelegate,ARSessionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.scene = SCNScene()
+        
         // Creates a tap handler and then sets it to a constant
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         
@@ -59,6 +61,39 @@ class NewVC: UIViewController, ARSCNViewDelegate,ARSessionDelegate {
         setupFocusSquare()
         
     }
+    
+    @IBAction func btnFlash(_ sender: Any) {
+        
+        let device = AVCaptureDevice.default(for: AVMediaType.video)
+        if (device!.hasTorch) {
+            do {
+                try device!.lockForConfiguration()
+                if (device!.torchMode == AVCaptureDevice.TorchMode.on) {
+                    device!.torchMode = AVCaptureDevice.TorchMode.off
+                } else {
+                    try device!.setTorchModeOn(level: 1.0)
+                }
+                device!.unlockForConfiguration()
+            } catch {
+                print(error)
+            }
+        }
+    }
+    @IBAction func btnReset(_ sender: Any) {
+        
+        for line in lines{
+            line.removeFromParentNode()
+        }
+        
+        let configuration = ARWorldTrackingConfiguration()
+         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        sceneView.debugOptions = .showFeaturePoints
+       
+        self.lines.removeAll()
+        self.line = nil
+        updatePointerColor(status: false)
+    }
+    
     
     func drawLine(){
         let node = SCNNode(geometry: SCNGeometry.lineFrom(vector: startPoint, toVector: endPoint))
@@ -101,6 +136,8 @@ class NewVC: UIViewController, ARSCNViewDelegate,ARSessionDelegate {
             self.sceneView.scene.rootNode.addChildNode(sphere)
             textNode.position = SCNVector3Make((startPoint.x + endPoint.x)/2.0, (startPoint.y + endPoint.y)/2.0, (startPoint.z + endPoint.z)/2.0)
             drawLine()
+            self.lines.append(line)
+            line = nil
             
         } else {
             startPoint = worldPosition
@@ -188,10 +225,22 @@ class NewVC: UIViewController, ARSCNViewDelegate,ARSessionDelegate {
                 let camera = self.sceneView.session.currentFrame?.camera
                 let cameraPos = SCNVector3.positionFromTransform(camera!.transform)
                 if cameraPos.distance(from: p) < 1.0 && self.line == nil {
-                    //updateView(state: false)
+                    self.updatePointerColor(status: false)
                     return
                 }
+                self.updatePointerColor(status: true)
             }
+        }
+    }
+    
+    func updatePointerColor(status:Bool){
+        //change image rendering from default to template in assests
+        if(status){
+            //alert color
+            indicator.tintColor =  UIColor(red: 223/255.0, green: 53/255.0, blue: 46/255.0, alpha: 1)
+        } else {
+            //fine color
+            indicator.tintColor = UIColor(red: 149/255.0, green: 210/255.0, blue: 107/255.0, alpha: 1)
         }
     }
 
@@ -218,11 +267,12 @@ class NewVC: UIViewController, ARSCNViewDelegate,ARSessionDelegate {
 
             
             sceneView.scene.rootNode.addChildNode(line)
+           
             glLineWidth(20)
             
             
             updateText()
-            
+
 
             
         }

@@ -24,6 +24,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Slice" translatesAutoresizingMaskIntoConstraints="NO" id="Jb3-2H-sLc">
                                 <rect key="frame" x="172.5" y="319.5" width="30" height="28"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" cyan="0.40999999999999998" magenta="0.0" yellow="0.13412404059999999" black="0.0" alpha="1" colorSpace="custom" customColorSpace="genericCMYKColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="Gyn-YE-qgc"/>
                                     <constraint firstAttribute="width" secondItem="Jb3-2H-sLc" secondAttribute="height" multiplier="15:14" id="NE4-nT-zaB"/>
@@ -43,22 +44,52 @@
                                     <action selector="btnCapture:" destination="BV1-FR-VrT" eventType="touchUpInside" id="qtq-uO-0Gi"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KmR-bz-RPa">
+                                <rect key="frame" x="324" y="20" width="39" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="SuJ-fa-KMG"/>
+                                    <constraint firstAttribute="width" constant="39" id="fjZ-2Z-40g"/>
+                                </constraints>
+                                <state key="normal" title="Reset">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="btnReset:" destination="BV1-FR-VrT" eventType="touchUpInside" id="1sg-nk-1W2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="teM-qS-e2e">
+                                <rect key="frame" x="326" y="58" width="37" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="37" id="lOs-XZ-WgU"/>
+                                    <constraint firstAttribute="height" constant="30" id="otE-yf-4Uv"/>
+                                </constraints>
+                                <state key="normal" title="Flash">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="btnFlash:" destination="BV1-FR-VrT" eventType="touchUpInside" id="ud2-dC-B7m"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="KmR-bz-RPa" secondAttribute="trailing" constant="12" id="4au-5o-cdR"/>
                             <constraint firstItem="Jb3-2H-sLc" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="AGx-Fs-2h3"/>
                             <constraint firstItem="Jb3-2H-sLc" firstAttribute="centerY" secondItem="BrB-h1-WRS" secondAttribute="centerY" id="Ed7-OV-S3f"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="KFr-el-eLl" secondAttribute="bottom" constant="20" id="Lzv-Ro-nh2"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="teM-qS-e2e" secondAttribute="trailing" constant="12" id="RAH-Ho-8be"/>
                             <constraint firstItem="KFr-el-eLl" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="U5m-SC-niH"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
+                            <constraint firstItem="teM-qS-e2e" firstAttribute="top" secondItem="KmR-bz-RPa" secondAttribute="bottom" constant="8" id="bT0-zS-WYk"/>
+                            <constraint firstItem="KmR-bz-RPa" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" id="cGd-C4-nVK"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
                     <connections>
-                        <outlet property="indicator" destination="Jb3-2H-sLc" id="KuU-Kp-z3Z"/>
+                        <outlet property="indicator" destination="Jb3-2H-sLc" id="i04-qM-oUG"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="iW9-lB-vBd"/>
                     </connections>
                 </viewController>
